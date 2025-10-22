@@ -1,0 +1,23 @@
+---
+- name: Install The other Indians webserver
+  hosts: servers
+
+  tasks:
+  #   - name: Install apache2 package
+  #     ansible.builtin.package:
+  #       name:
+  #         - httpd
+  #         - apache2
+  #       state: present
+  #     become: true
+  #     ignore_errors: true
+
+    - name: Set package_name for Ubuntu
+      ansible.builtin.set_fact:
+        package_name: apache2
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - name: Install Apache
+      ansible.builtin.package:
+        name: httpd
+        state: present

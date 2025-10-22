@@ -1,0 +1,44 @@
+---
+- name: Loop Playbook
+  hosts: copenhagen
+  gather_facts: true
+
+  vars:
+    users:
+      - alice
+      - bob
+      - charlie
+
+  tasks:
+    - name: Create multiple files
+      ansible.builtin.file:
+        path: "/tmp/{{ item }}"
+        state: touch
+        mode: '0644'
+      loop:
+        - file1.txt
+        - file2.txt
+        - file3.txt
+
+    - name: Print usernames
+      ansible.builtin.debug:
+        msg: "User: {{ item | to_nice_json }}"
+      loop: "{{ users }}"
+
+    - name: Loop over dictionary
+      ansible.builtin.debug:
+        msg: "Package {{ item.key }} should be {{ item.value }}"
+      loop:
+        - { key: 'httpd', value: 'present' }
+        - { key: 'vim', value: 'present' }
+        - { key: 'telnet', value: 'absent' }
+
+    - name: Loop with index
+      ansible.builtin.debug:
+        msg: "Item {{ idx }}: {{ item }}"
+      loop:
+        - red
+        - green
+        - blue
+      loop_control:
+        index_var: idx
